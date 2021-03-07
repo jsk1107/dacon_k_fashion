@@ -60,6 +60,8 @@ class KfashionDataset(Dataset):
         bbox[2] = bbox[0] + bbox[2]
         bbox[3] = bbox[1] + bbox[3]
         return bbox
+
+
 if __name__ == '__main__':
 
     img_dir = r'C:\Users\jsk\Documents\data\train'
