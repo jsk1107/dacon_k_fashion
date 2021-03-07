@@ -24,8 +24,8 @@ img_dir = r'C:\Users\jsk\Documents\data\train'
 anno_dir = r'C:\Users\jsk\Documents\data'
 set_name = 'train'
 dataset = KfashionDataset(img_dir, anno_dir, set_name, transforms=get_transform(True))
-num_classes = len(dataset.category)
-print(f'num_classes: {num_classes}')
+num_classes = len(dataset.category) + 1
+print(f'num_classes: {num_classes}. 21 + 1(background)')
 
 dataloader = DataLoader(dataset, batch_size=2, collate_fn=collate_fn)
 

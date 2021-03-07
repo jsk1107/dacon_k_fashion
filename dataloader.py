@@ -4,8 +4,6 @@ import os
 import cv2
 import torch
 from PIL import Image
-import numpy as np
-from pycocotools.cocoeval import COCOeval
 
 
 class KfashionDataset(Dataset):
@@ -43,14 +41,23 @@ class KfashionDataset(Dataset):
 
     def get_annotaion(self, ids):
         anno_ids = self.coco.getAnnIds(imgIds=self.image_ids[ids], iscrowd=False)
-        coco_annos = self.coco.loadAnns(anno_ids)
         target = {}
         boxes = []
         labels = []
+
+        # some images appear to miss annotations
+        if len(anno_ids) == 0:
+            target['boxes'] = torch.as_tensor([[10, 10, 20, 20]], dtype=torch.float32)
+            target['labels'] = torch.as_tensor([[0]], dtype=torch.float32)
+            return target
+
+        coco_annos = self.coco.loadAnns(anno_ids)
+
         for coco_anno in coco_annos:
             bbox = self.bbox_transform(coco_anno['bbox'])
             boxes.append(bbox)
-            labels.append(coco_anno['category_id']-1)
+            labels.append(coco_anno['category_id'])
+
         target['boxes'] = torch.as_tensor(boxes, dtype=torch.float32)
         target['labels'] = torch.as_tensor(labels, dtype=torch.int64)
 
